@@ -44,5 +44,28 @@ public class Main {
             System.out.println("(" + delta.getRow() + " " + delta.getColumn() + " " + delta.getValue() + ")");
         }
         System.out.println("------------------");
+
+        Cell minDelta = new Cell(-1, -1, -1);
+
+        for (int i = 0; i < deltas.size(); i++) {
+            if (i == 0) {
+                minDelta = deltas.get(i);
+                continue;
+            } else {
+                if (deltas.get(i).getValue() < minDelta.getValue()) {
+                    minDelta = deltas.get(i);
+                }
+            }
+        }
+
+        int[][] roadMap = Methods.searchRoad(values, minDelta);
+
+        for (int[] i: roadMap) {
+            for (int j: i) {
+                System.out.print(j + "\t");
+            }
+            System.out.println();
+        }
+        System.out.println("------------------");
     }
 }
