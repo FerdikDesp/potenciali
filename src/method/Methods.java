@@ -125,22 +125,417 @@ public class Methods {
         return deltas;
     }
 
-    public static ArrayList<Cell> getCells(Cell delta, int[][] values) {
+    public static int[][] searchRoad(int[][] values, Cell delta) {
         int[][] roadMap = new int[values.length][values[0].length];
-        for (int[] i: roadMap) {
-            for (int j: i) {
-                j = 0;
+        roadMap[delta.getRow()][delta.getColumn()] = 1;
+
+        roadMap = goUp(values, roadMap, delta, delta);
+
+        boolean isMapClear = true;
+
+        for (int i = 0; i < roadMap.length; i++) {
+            for (int j = 0; j < roadMap[i].length; j++) {
+                if (i == delta.getRow() && j == delta.getColumn()) {
+                    if (roadMap[i][j] == 0 || roadMap[i][j] == -1) {
+                        isMapClear = false;
+                    }
+                } else {
+                    if (roadMap[i][j] == 1 || roadMap[i][j] == -1) {
+                        isMapClear = false;
+                    }
+                }
             }
         }
 
-        return searchRoad(roadMap, delta);
+        if (isMapClear) {
+            roadMap = goDown(values, roadMap, delta, delta);
+        } else {
+            return roadMap;
+        }
+
+        for (int i = 0; i < roadMap.length; i++) {
+            for (int j = 0; j < roadMap[i].length; j++) {
+                if (i == delta.getRow() && j == delta.getColumn()) {
+                    if (roadMap[i][j] == 0 || roadMap[i][j] == -1) {
+                        isMapClear = false;
+                    }
+                } else {
+                    if (roadMap[i][j] == 1 || roadMap[i][j] == -1) {
+                        isMapClear = false;
+                    }
+                }
+            }
+        }
+
+        if (isMapClear) {
+            roadMap = goLeft(values, roadMap, delta, delta);
+        } else {
+            return roadMap;
+        }
+
+        for (int i = 0; i < roadMap.length; i++) {
+            for (int j = 0; j < roadMap[i].length; j++) {
+                if (i == delta.getRow() && j == delta.getColumn()) {
+                    if (roadMap[i][j] == 0 || roadMap[i][j] == -1) {
+                        isMapClear = false;
+                    }
+                } else {
+                    if (roadMap[i][j] == 1 || roadMap[i][j] == -1) {
+                        isMapClear = false;
+                    }
+                }
+            }
+        }
+
+        if (isMapClear) {
+            roadMap = goRight(values, roadMap, delta, delta);
+        } else {
+            return roadMap;
+        }
+
+        for (int i = 0; i < roadMap.length; i++) {
+            for (int j = 0; j < roadMap[i].length; j++) {
+                if (i == delta.getRow() && j == delta.getColumn()) {
+                    if (roadMap[i][j] == 0 || roadMap[i][j] == -1) {
+                        isMapClear = false;
+                    }
+                } else {
+                    if (roadMap[i][j] == 1 || roadMap[i][j] == -1) {
+                        isMapClear = false;
+                    }
+                }
+            }
+        }
+
+        return roadMap;
+
+        /*ArrayList<Cell> road = new ArrayList<>();
+        road.add(delta);
+
+        road.add(goUp(roadMap, delta, road));
+        road.add(goDown(roadMap, delta, road));
+        road.add(goLeft(roadMap, delta, road));
+        road.add(goRight(roadMap, delta, road));
+
+        return road;*/
     }
 
-    private static ArrayList<Cell> searchRoad(int[][] roadMap, Cell delta) {
-        ArrayList<Cell> cells = new ArrayList<>();
-        cells.add(delta);
-        
-        return cells;
+    public static int[][] goUp(int[][] values, int[][] roadMap, Cell delta, Cell current) {
+        for (int[] i: roadMap) {
+            for (int j: i) {
+                System.out.print(j + "\t");
+            }
+            System.out.println();
+        }
+        System.out.println("------------------");
+        System.out.println("Движение вверх, изн. позиция ячейки: Строка " + current.getRow() + ", столбец " + current.getColumn());
+        boolean isEven = true;
+
+        for (int[] i: roadMap) {
+            for (int j: i) {
+                if (j != 0) {
+                    isEven = !isEven;
+                }
+            }
+        }
+
+        boolean isAnyVariants = false;
+
+        for (int i = current.getRow() - 1; i >= 0; i--) {
+            if (roadMap[i][current.getColumn()] != 0) {
+                return roadMap;
+            }
+            if (values[i][current.getColumn()] != 0) {
+                if (isEven) {
+                    roadMap[i][current.getColumn()] = 1;
+                } else {
+                    roadMap[i][current.getColumn()] = -1;
+                }
+                int[][] roadMapNew = roadMap;
+                roadMap = goLeft(values, roadMap, delta, new Cell(i, current.getColumn(), current.getValue()));
+                boolean isRoadsEquals = true;
+                for (int k1 = 0; k1 < roadMapNew.length; k1++) {
+                    for (int j = 0; j < roadMapNew[k1].length; j++) {
+                        if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                            isRoadsEquals = false;
+                        }
+                    }
+                }
+                if (isRoadsEquals) {
+                    roadMapNew = roadMap;
+                    roadMap = goRight(values, roadMap, delta, new Cell(i, current.getColumn(), current.getValue()));
+
+                    isRoadsEquals = true;
+                    for (int k1 = 0; k1 < roadMapNew.length; k1++) {
+                        for (int j = 0; j < roadMapNew[k1].length; j++) {
+                            if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                                isRoadsEquals = false;
+                            }
+                        }
+                    }
+
+                    if (isRoadsEquals) {
+                        roadMap[i][current.getColumn()] = 0;
+                    }
+                }
+            }
+        }
+
+        if (!isAnyVariants) {
+            System.out.println("Вариантов нет, откатываемся");
+            /*for (int i = 0; i < roadMap.length; i++) {
+                for (int j = 0; j < roadMap[i].length; j++) {
+                    if (i == delta.getRow() && j == delta.getColumn()) {
+                        roadMap[i][j] = 1;
+                    } else {
+                        roadMap[i][j] = 0;
+                    }
+                }
+            }*/
+            /*roadMap[current.getRow()][current.getColumn()] = 0;
+            roadMap[delta.getRow()][delta.getColumn()] = 1;*/
+        }
+
+        return roadMap;
+    }
+
+    public static int[][] goDown(int[][] values, int[][] roadMap, Cell delta, Cell current) {
+        for (int[] i: roadMap) {
+            for (int j: i) {
+                System.out.print(j + "\t");
+            }
+            System.out.println();
+        }
+        System.out.println("------------------");
+        System.out.println("Движение вниз, изн. позиция ячейки: Строка " + current.getRow() + ", столбец " + current.getColumn());
+        boolean isEven = true;
+
+        for (int[] i: roadMap) {
+            for (int j: i) {
+                if (j != 0) {
+                    isEven = !isEven;
+                }
+            }
+        }
+
+        boolean isAnyVariants = false;
+
+        for (int i = current.getRow() + 1; i < values.length; i++) {
+            if (roadMap[i][current.getColumn()] != 0) {
+                return roadMap;
+            }
+            if (values[i][current.getColumn()] != 0) {
+                if (isEven) {
+                    roadMap[i][current.getColumn()] = 1;
+                } else {
+                    roadMap[i][current.getColumn()] = -1;
+                }
+                int[][] roadMapNew = roadMap;
+                roadMapNew = goLeft(values, roadMap, delta, new Cell(i, current.getColumn(), current.getValue()));
+                boolean isRoadsEquals = true;
+                for (int k1 = 0; k1 < roadMapNew.length; k1++) {
+                    for (int j = 0; j < roadMapNew[k1].length; j++) {
+                        if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                            isRoadsEquals = false;
+                        }
+                    }
+                }
+                if (isRoadsEquals) {
+                    roadMapNew = roadMap;
+                    roadMap = goRight(values, roadMap, delta, new Cell(i, current.getColumn(), current.getValue()));
+
+                    isRoadsEquals = true;
+                    for (int k1 = 0; k1 < roadMapNew.length; k1++) {
+                        for (int j = 0; j < roadMapNew[k1].length; j++) {
+                            if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                                isRoadsEquals = false;
+                            }
+                        }
+                    }
+
+                    if (isRoadsEquals) {
+                        roadMap[i][current.getColumn()] = 0;
+                    }
+                }
+            }
+        }
+
+        if (!isAnyVariants) {
+            System.out.println("Вариантов нет, откатываемся");
+            /*for (int i = 0; i < roadMap.length; i++) {
+                for (int j = 0; j < roadMap[i].length; j++) {
+                    if (i == delta.getRow() && j == delta.getColumn()) {
+                        roadMap[i][j] = 1;
+                    } else {
+                        roadMap[i][j] = 0;
+                    }
+                }
+            }*/
+            /*roadMap[current.getRow()][current.getColumn()] = 0;
+            roadMap[delta.getRow()][delta.getColumn()] = 1;*/
+        }
+
+        return roadMap;
+    }
+
+    public static int[][] goLeft(int[][] values, int[][] roadMap, Cell delta, Cell current) {
+        for (int[] i: roadMap) {
+            for (int j: i) {
+                System.out.print(j + "\t");
+            }
+            System.out.println();
+        }
+        System.out.println("------------------");
+        System.out.println("Движение влево, изн. позиция ячейки: Строка " + current.getRow() + ", столбец " + current.getColumn());
+        boolean isEven = true;
+
+        for (int[] i: roadMap) {
+            for (int j: i) {
+                if (j != 0) {
+                    isEven = !isEven;
+                }
+            }
+        }
+
+        boolean isAnyVariants = false;
+
+        for (int i = current.getColumn() - 1; i >= 0; i--) {
+            if (roadMap[current.getRow()][i] != 0) {
+                return roadMap;
+            }
+            if (values[current.getRow()][i] != 0) {
+                if (isEven) {
+                    roadMap[current.getRow()][i] = 1;
+                } else {
+                    roadMap[current.getRow()][i] = -1;
+                }
+                int[][] roadMapNew = roadMap;
+                roadMap = goUp(values, roadMap, delta, new Cell(current.getRow(), i, current.getValue()));
+                boolean isRoadsEquals = true;
+                for (int k1 = 0; k1 < roadMapNew.length; k1++) {
+                    for (int j = 0; j < roadMapNew[k1].length; j++) {
+                        if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                            isRoadsEquals = false;
+                        }
+                    }
+                }
+                if (isRoadsEquals) {
+                    roadMapNew = roadMap;
+                    roadMap = goDown(values, roadMap, delta, new Cell(current.getRow(), i, current.getValue()));
+
+                    isRoadsEquals = true;
+                    for (int k1 = 0; k1 < roadMapNew.length; k1++) {
+                        for (int j = 0; j < roadMapNew[k1].length; j++) {
+                            if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                                isRoadsEquals = false;
+                            }
+                        }
+                    }
+
+                    if (isRoadsEquals) {
+                        roadMap[i][current.getColumn()] = 0;
+                    }
+                }
+            }
+        }
+
+        if (!isAnyVariants) {
+            System.out.println("Вариантов нет, откатываемся");
+            /*for (int i = 0; i < roadMap.length; i++) {
+                for (int j = 0; j < roadMap[i].length; j++) {
+                    if (i == delta.getRow() && j == delta.getColumn()) {
+                        roadMap[i][j] = 1;
+                    } else {
+                        roadMap[i][j] = 0;
+                    }
+                }
+            }*/
+            /*roadMap[current.getRow()][current.getColumn()] = 0;
+            roadMap[delta.getRow()][delta.getColumn()] = 1;*/
+        }
+
+        return roadMap;
+    }
+
+    public static int[][] goRight(int[][] values, int[][] roadMap, Cell delta, Cell current) {
+        for (int[] i: roadMap) {
+            for (int j: i) {
+                System.out.print(j + "\t");
+            }
+            System.out.println();
+        }
+        System.out.println("------------------");
+        System.out.println("Движение вправо, изн. позиция ячейки: Строка " + current.getRow() + ", столбец " + current.getColumn());
+        boolean isEven = true;
+
+        for (int[] i: roadMap) {
+            for (int j: i) {
+                if (j != 0) {
+                    isEven = !isEven;
+                }
+            }
+        }
+
+        boolean isAnyVariants = false;
+
+        for (int i = current.getColumn() + 1; i < values[0].length; i++) {
+            System.out.println("Вариантов нет, откатываемся");
+            if (roadMap[current.getRow()][i] != 0) {
+                return roadMap;
+            }
+            if (values[current.getRow()][i] != 0) {
+                if (isEven) {
+                    roadMap[current.getRow()][i] = 1;
+                } else {
+                    roadMap[current.getRow()][i] = -1;
+                }
+                int[][] roadMapNew = roadMap;
+                roadMap = goUp(values, roadMap, delta, new Cell(current.getRow(), i, current.getValue()));
+                boolean isRoadsEquals = true;
+                for (int k1 = 0; k1 < roadMapNew.length; k1++) {
+                    for (int j = 0; j < roadMapNew[k1].length; j++) {
+                        if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                            isRoadsEquals = false;
+                        }
+                    }
+                }
+                if (isRoadsEquals) {
+                    roadMapNew = roadMap;
+                    roadMap = goDown(values, roadMap, delta, new Cell(current.getRow(), i, current.getValue()));
+
+                    isRoadsEquals = true;
+                    for (int k1 = 0; k1 < roadMapNew.length; k1++) {
+                        for (int j = 0; j < roadMapNew[k1].length; j++) {
+                            if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                                isRoadsEquals = false;
+                            }
+                        }
+                    }
+
+                    if (isRoadsEquals) {
+                        roadMap[i][current.getColumn()] = 0;
+                    }
+                }
+
+            }
+        }
+
+        if (!isAnyVariants) {
+            System.out.println("Вариантов нет, откатываемся");
+            /*for (int i = 0; i < roadMap.length; i++) {
+                for (int j = 0; j < roadMap[i].length; j++) {
+                    if (i == delta.getRow() && j == delta.getColumn()) {
+                        roadMap[i][j] = 1;
+                    } else {
+                        roadMap[i][j] = 0;
+                    }
+                }
+            }*/
+            /*roadMap[current.getRow()][current.getColumn()] = 0;
+            roadMap[delta.getRow()][delta.getColumn()] = 1;*/
+        }
+
+        return roadMap;
     }
 
 }
