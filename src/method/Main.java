@@ -58,14 +58,97 @@ public class Main {
             }
         }
 
-        int[][] roadMap = Methods.searchRoad(values, minDelta);
+        int[][] roadMap;
+        int minValue;
 
-        for (int[] i: roadMap) {
-            for (int j: i) {
-                System.out.print(j + "\t");
+        while (minDelta.getValue() < 0) {
+            roadMap = Methods.searchRoad(values, minDelta);
+
+            for (int[] i: roadMap) {
+                for (int j: i) {
+                    if (j == 2) {
+                        j = 1;
+                    }
+                    System.out.print(j + "\t");
+                }
+                System.out.println();
             }
-            System.out.println();
+            System.out.println("------------------");
+
+            minValue = values[0][0];
+
+            for (int i = 0; i < values.length; i++) {
+                for (int j = 0; j < values[i].length; j++) {
+                    if (roadMap[i][j] == -1) {
+                        if (values[i][j] < minValue) {
+                            minValue = values[i][j];
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < values.length; i++) {
+                for (int j = 0; j < values[i].length; j++) {
+                    if (roadMap[i][j] == 1) {
+                        values[i][j] += minValue;
+                    } else if (roadMap[i][j] == -1) {
+                        values[i][j] -= minValue;
+                    }
+                }
+            }
+
+            for (int[] i: values) {
+                for (int j: i) {
+                    System.out.print(j + "\t");
+                }
+                System.out.println();
+            }
+            System.out.println("------------------");
+
+            alphasAndBetas = Methods.getAlphasAndBetas(values, valency);
+
+            for (int[] i: alphasAndBetas) {
+                for (int j: i) {
+                    System.out.print(j + "\t");
+                }
+                System.out.println();
+            }
+            System.out.println("------------------");
+
+            alphas = alphasAndBetas[0];
+            betas = alphasAndBetas[1];
+
+            deltas = Methods.getDeltas(alphas, betas, values, valency);
+
+            for (Cell delta: deltas) {
+                System.out.println("(" + delta.getRow() + " " + delta.getColumn() + " " + delta.getValue() + ")");
+            }
+            System.out.println("------------------");
+
+            minDelta = new Cell(-1, -1, -1);
+
+            for (int i = 0; i < deltas.size(); i++) {
+                if (i == 0) {
+                    minDelta = deltas.get(i);
+                    continue;
+                } else {
+                    if (deltas.get(i).getValue() < minDelta.getValue()) {
+                        minDelta = deltas.get(i);
+                    }
+                }
+            }
         }
-        System.out.println("------------------");
+
+        System.out.println("Готов ответ!");
+        int sum = 0;
+        for (int i = 0; i < values.length; i++) {
+            for (int j = 0; j < values[i].length; j++) {
+                if (values[i][j] != 0) {
+                    sum += values[i][j];
+                    System.out.println("x[" + i + "][" + j + "] = " + values[i][j]);
+                }
+            }
+        }
+        System.out.println("Сумма: " + sum);
     }
 }

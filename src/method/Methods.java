@@ -94,6 +94,15 @@ public class Methods {
                     allAlphasAndBetasFound = false;
                 }
             }
+
+            System.out.println("alphas");
+            for (Integer i: alphas) {
+                System.out.print(i + " ");
+            }
+            System.out.println("betas");
+            for (Integer i: betas) {
+                System.out.print(i + " ");
+            }
         }
 
         int[] resultedAlphas = new int[values.length];
@@ -223,6 +232,14 @@ public class Methods {
     public static int[][] goUp(int[][] values, int[][] roadMap, Cell delta, Cell current) {
         for (int[] i: roadMap) {
             for (int j: i) {
+                if (j == 2) {
+                    return roadMap;
+                }
+            }
+        }
+
+        for (int[] i: roadMap) {
+            for (int j: i) {
                 System.out.print(j + "\t");
             }
             System.out.println();
@@ -243,6 +260,8 @@ public class Methods {
 
         for (int i = current.getRow() - 1; i >= 0; i--) {
             if (roadMap[i][current.getColumn()] != 0) {
+                System.out.println("Найдено совпадение!");
+                roadMap[current.getRow()][i] = 2;
                 return roadMap;
             }
             if (values[i][current.getColumn()] != 0) {
@@ -252,23 +271,38 @@ public class Methods {
                     roadMap[i][current.getColumn()] = -1;
                 }
                 int[][] roadMapNew = roadMap;
-                roadMap = goLeft(values, roadMap, delta, new Cell(i, current.getColumn(), current.getValue()));
+                roadMapNew = goLeft(values, roadMap, delta, new Cell(i, current.getColumn(), current.getValue()));
+                for (int[] k: roadMapNew) {
+                    for (int j: k) {
+                        if (j == 2) {
+                            return roadMapNew;
+                        }
+                    }
+                }
                 boolean isRoadsEquals = true;
                 for (int k1 = 0; k1 < roadMapNew.length; k1++) {
                     for (int j = 0; j < roadMapNew[k1].length; j++) {
-                        if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                        //if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                        if (roadMapNew[k1][j] == 2) {
                             isRoadsEquals = false;
                         }
                     }
                 }
                 if (isRoadsEquals) {
                     roadMapNew = roadMap;
-                    roadMap = goRight(values, roadMap, delta, new Cell(i, current.getColumn(), current.getValue()));
-
+                    roadMapNew = goRight(values, roadMap, delta, new Cell(i, current.getColumn(), current.getValue()));
+                    for (int[] k: roadMapNew) {
+                        for (int j: k) {
+                            if (j == 2) {
+                                return roadMapNew;
+                            }
+                        }
+                    }
                     isRoadsEquals = true;
                     for (int k1 = 0; k1 < roadMapNew.length; k1++) {
                         for (int j = 0; j < roadMapNew[k1].length; j++) {
-                            if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                            //if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                            if (roadMapNew[k1][j] == 2) {
                                 isRoadsEquals = false;
                             }
                         }
@@ -302,6 +336,14 @@ public class Methods {
     public static int[][] goDown(int[][] values, int[][] roadMap, Cell delta, Cell current) {
         for (int[] i: roadMap) {
             for (int j: i) {
+                if (j == 2) {
+                    return roadMap;
+                }
+            }
+        }
+
+        for (int[] i: roadMap) {
+            for (int j: i) {
                 System.out.print(j + "\t");
             }
             System.out.println();
@@ -322,6 +364,8 @@ public class Methods {
 
         for (int i = current.getRow() + 1; i < values.length; i++) {
             if (roadMap[i][current.getColumn()] != 0) {
+                System.out.println("Найдено совпадение!");
+                roadMap[current.getRow()][i] = 2;
                 return roadMap;
             }
             if (values[i][current.getColumn()] != 0) {
@@ -332,22 +376,56 @@ public class Methods {
                 }
                 int[][] roadMapNew = roadMap;
                 roadMapNew = goLeft(values, roadMap, delta, new Cell(i, current.getColumn(), current.getValue()));
+                for (int[] k: roadMapNew) {
+                    for (int j: k) {
+                        if (j == 2) {
+                            return roadMapNew;
+                        }
+                    }
+                }
                 boolean isRoadsEquals = true;
+
+                for (int[] k: roadMap) {
+                    for (int j: k) {
+                        System.out.print(j + "\t");
+                    }
+                    System.out.println();
+                }
+
+                System.out.println("------------------");
+                System.out.println("------------------");
+
+                for (int[] k: roadMapNew) {
+                    for (int j: k) {
+                        System.out.print(j + "\t");
+                    }
+                    System.out.println();
+                }
+
                 for (int k1 = 0; k1 < roadMapNew.length; k1++) {
                     for (int j = 0; j < roadMapNew[k1].length; j++) {
-                        if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                        //if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                        if (roadMapNew[k1][j] == 2) {
                             isRoadsEquals = false;
                         }
                     }
                 }
+                System.out.println(isRoadsEquals);
                 if (isRoadsEquals) {
                     roadMapNew = roadMap;
-                    roadMap = goRight(values, roadMap, delta, new Cell(i, current.getColumn(), current.getValue()));
-
+                    roadMapNew = goRight(values, roadMap, delta, new Cell(i, current.getColumn(), current.getValue()));
+                    for (int[] k: roadMapNew) {
+                        for (int j: k) {
+                            if (j == 2) {
+                                return roadMapNew;
+                            }
+                        }
+                    }
                     isRoadsEquals = true;
                     for (int k1 = 0; k1 < roadMapNew.length; k1++) {
                         for (int j = 0; j < roadMapNew[k1].length; j++) {
-                            if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                            //if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                            if (roadMapNew[k1][j] == 2) {
                                 isRoadsEquals = false;
                             }
                         }
@@ -381,6 +459,14 @@ public class Methods {
     public static int[][] goLeft(int[][] values, int[][] roadMap, Cell delta, Cell current) {
         for (int[] i: roadMap) {
             for (int j: i) {
+                if (j == 2) {
+                    return roadMap;
+                }
+            }
+        }
+
+        for (int[] i: roadMap) {
+            for (int j: i) {
                 System.out.print(j + "\t");
             }
             System.out.println();
@@ -401,6 +487,8 @@ public class Methods {
 
         for (int i = current.getColumn() - 1; i >= 0; i--) {
             if (roadMap[current.getRow()][i] != 0) {
+                System.out.println("Найдено совпадение!");
+                roadMap[current.getRow()][i] = 2;
                 return roadMap;
             }
             if (values[current.getRow()][i] != 0) {
@@ -410,30 +498,45 @@ public class Methods {
                     roadMap[current.getRow()][i] = -1;
                 }
                 int[][] roadMapNew = roadMap;
-                roadMap = goUp(values, roadMap, delta, new Cell(current.getRow(), i, current.getValue()));
+                roadMapNew = goUp(values, roadMap, delta, new Cell(current.getRow(), i, current.getValue()));
+                for (int[] k: roadMapNew) {
+                    for (int j: k) {
+                        if (j == 2) {
+                            return roadMapNew;
+                        }
+                    }
+                }
                 boolean isRoadsEquals = true;
                 for (int k1 = 0; k1 < roadMapNew.length; k1++) {
                     for (int j = 0; j < roadMapNew[k1].length; j++) {
-                        if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                        //if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                        if (roadMapNew[k1][j] == 2) {
                             isRoadsEquals = false;
                         }
                     }
                 }
                 if (isRoadsEquals) {
                     roadMapNew = roadMap;
-                    roadMap = goDown(values, roadMap, delta, new Cell(current.getRow(), i, current.getValue()));
-
+                    roadMapNew = goDown(values, roadMap, delta, new Cell(current.getRow(), i, current.getValue()));
+                    for (int[] k: roadMapNew) {
+                        for (int j: k) {
+                            if (j == 2) {
+                                return roadMapNew;
+                            }
+                        }
+                    }
                     isRoadsEquals = true;
                     for (int k1 = 0; k1 < roadMapNew.length; k1++) {
                         for (int j = 0; j < roadMapNew[k1].length; j++) {
-                            if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                            //if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                            if (roadMapNew[k1][j] == 2) {
                                 isRoadsEquals = false;
                             }
                         }
                     }
 
                     if (isRoadsEquals) {
-                        roadMap[i][current.getColumn()] = 0;
+                        roadMap[current.getRow()][i] = 0;
                     }
                 }
             }
@@ -460,6 +563,14 @@ public class Methods {
     public static int[][] goRight(int[][] values, int[][] roadMap, Cell delta, Cell current) {
         for (int[] i: roadMap) {
             for (int j: i) {
+                if (j == 2) {
+                    return roadMap;
+                }
+            }
+        }
+
+        for (int[] i: roadMap) {
+            for (int j: i) {
                 System.out.print(j + "\t");
             }
             System.out.println();
@@ -481,6 +592,8 @@ public class Methods {
         for (int i = current.getColumn() + 1; i < values[0].length; i++) {
             System.out.println("Вариантов нет, откатываемся");
             if (roadMap[current.getRow()][i] != 0) {
+                System.out.println("Найдено совпадение!");
+                roadMap[current.getRow()][i] = 2;
                 return roadMap;
             }
             if (values[current.getRow()][i] != 0) {
@@ -490,30 +603,45 @@ public class Methods {
                     roadMap[current.getRow()][i] = -1;
                 }
                 int[][] roadMapNew = roadMap;
-                roadMap = goUp(values, roadMap, delta, new Cell(current.getRow(), i, current.getValue()));
+                roadMapNew = goUp(values, roadMap, delta, new Cell(current.getRow(), i, current.getValue()));
+                for (int[] k: roadMapNew) {
+                    for (int j: k) {
+                        if (j == 2) {
+                            return roadMapNew;
+                        }
+                    }
+                }
                 boolean isRoadsEquals = true;
                 for (int k1 = 0; k1 < roadMapNew.length; k1++) {
                     for (int j = 0; j < roadMapNew[k1].length; j++) {
-                        if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                        //if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                        if (roadMapNew[k1][j] == 2) {
                             isRoadsEquals = false;
                         }
                     }
                 }
                 if (isRoadsEquals) {
                     roadMapNew = roadMap;
-                    roadMap = goDown(values, roadMap, delta, new Cell(current.getRow(), i, current.getValue()));
-
+                    roadMapNew = goDown(values, roadMap, delta, new Cell(current.getRow(), i, current.getValue()));
+                    for (int[] k: roadMapNew) {
+                        for (int j: k) {
+                            if (j == 2) {
+                                return roadMapNew;
+                            }
+                        }
+                    }
                     isRoadsEquals = true;
                     for (int k1 = 0; k1 < roadMapNew.length; k1++) {
                         for (int j = 0; j < roadMapNew[k1].length; j++) {
-                            if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                            //if (roadMapNew[k1][j] != roadMap[k1][j]) {
+                            if (roadMapNew[k1][j] == 2) {
                                 isRoadsEquals = false;
                             }
                         }
                     }
 
                     if (isRoadsEquals) {
-                        roadMap[i][current.getColumn()] = 0;
+                        roadMap[current.getRow()][i] = 0;
                     }
                 }
 
